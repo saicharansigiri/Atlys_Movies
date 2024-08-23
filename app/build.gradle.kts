@@ -26,7 +26,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField(type = "String", name = "OMDB_API_KEY", value = "${properties["API_KEY"]}")
+        buildConfigField(type = "String", name = "OMDB_API_KEY", value = "${properties["OMDB_API_KEY"]}")
     }
 
     buildTypes {
