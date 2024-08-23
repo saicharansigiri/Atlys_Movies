@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Atlys Movies</string>
+    <string name="description">this is an movie image</string>
 </resources>
