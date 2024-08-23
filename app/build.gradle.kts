@@ -67,5 +67,15 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    //retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    //viewmodel-compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    // di- hilt
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    //navigation
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+    //coil image loading lib
+    implementation("io.coil-kt:coil-compose:2.7.0")
 
 }
