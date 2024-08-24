@@ -12,24 +12,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.atlysmovies.data.model.Movie
 import com.example.atlysmovies.ui.components.AppBar
 import com.example.atlysmovies.ui.components.MovieDescription
 import com.example.atlysmovies.ui.components.MovieDetailPoster
 
 @Composable
-fun MovieDetailScreen(paddingValues: PaddingValues) {
-    val text = ""
+fun MovieDetailScreen(movie: Movie, paddingValues: PaddingValues, onBackClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(paddingValues).padding(vertical = 16.dp, horizontal = 16.dp)
+            .padding(paddingValues)
+            .padding(vertical = 16.dp, horizontal = 16.dp)
     ) {
-        AppBar()
+        AppBar(onBackClick)
         Spacer(modifier = Modifier.height(24.dp))
-        MovieDetailPoster()
+        MovieDetailPoster(movie.poster)
         Spacer(modifier = Modifier.height(24.dp))
-        MovieDescription(text = text)
+        MovieDescription(text = movie.title)
     }
 }
 
@@ -37,5 +38,6 @@ fun MovieDetailScreen(paddingValues: PaddingValues) {
 @Preview
 fun PreviewMovieDetailScreen() {
     val paddingValues = PaddingValues(16.dp)
-    MovieDetailScreen(paddingValues)
+    val movie = Movie("Doctor Strange", "https://www.omdbapi.com/src/poster.jpg", "")
+    MovieDetailScreen(movie, paddingValues) {}
 }

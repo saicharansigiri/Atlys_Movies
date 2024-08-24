@@ -3,9 +3,12 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id("kotlin-parcelize")
+    kotlin("plugin.serialization") version "2.0.20"
+
 }
 
 val keysFile = rootProject.file("keys.properties")
@@ -78,24 +81,27 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     //retrofit & Gson
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation(libs.retrofit)
     implementation(libs.converter.gson)
 
     //ok http
     implementation(libs.okhttp)
 
     //viewmodel-compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     //Hilt
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
 
     //navigation
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation(libs.androidx.navigation.compose)
     //coil image loading lib
-    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation(libs.coil.compose)
+
+    //kotlin serialization
+    implementation(libs.kotlinx.serialization.json)
 
 }
 

@@ -1,5 +1,6 @@
 package com.example.atlysmovies.data.repository
 
+import android.util.Log
 import com.example.atlysmovies.data.model.Movie
 import com.example.atlysmovies.data.network.OmdbApiService
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +16,13 @@ class MoviesRepoImp @Inject constructor(private val omdbApiService: OmdbApiServi
         return flow {
             try {
                 val response = omdbApiService.getMovieDetails(searchQuery)
-                emit(response.list)
+                val listWithDescription = response.list.map { movie ->
+                    val description = """
+                        During World War II, Lt. Gen. Leslie Groves Jr. appoints physicist J. Robert Oppenheimer to work on the top-secret Manhattan Project. Oppenheimer and a team of scientists spend years developing and designing the atomic bomb. Their work comes to fruition on July 16, 1945, as they witness the world's first nuclear explosion, forever changing the course of history.
+                    """.trimIndent()
+                    movie.copy(description = description)
+                }
+                emit(listWithDescription)
             } catch (e: HttpException) {
                 throw IOException("HTTP Error: ${e.message()}")
             }

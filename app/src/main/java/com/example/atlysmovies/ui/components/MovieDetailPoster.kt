@@ -26,7 +26,7 @@ import coil.request.ImageRequest
 import com.example.atlysmovies.R
 
 @Composable
-fun MovieDetailPoster() {
+fun MovieDetailPoster(poster: String) {
     Column(horizontalAlignment = Alignment.Start) {
         Card(
             modifier = Modifier
@@ -37,7 +37,7 @@ fun MovieDetailPoster() {
         {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://example.com/image.jpg")
+                    .data(poster)
                     .crossfade(true)
                     .build(),
                 placeholder = painterResource(R.drawable.error),
@@ -60,5 +60,5 @@ fun MovieDetailPoster() {
 @Composable
 @Preview
 fun PreviewMovieDetailPoster() {
-    MovieDetailPoster()
+    MovieDetailPoster("https://sample.jpg")
 }

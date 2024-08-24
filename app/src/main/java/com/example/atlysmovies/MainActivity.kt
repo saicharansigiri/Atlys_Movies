@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.atlysmovies.ui.navigation.MainNavigation
 import com.example.atlysmovies.ui.screens.MovieDetailScreen
 import com.example.atlysmovies.ui.screens.MovieListScreen
 import com.example.atlysmovies.ui.theme.AtlysMoviesTheme
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AtlysMoviesTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MovieDetailScreen(innerPadding)
+                    MainNavigation(paddingValues = innerPadding)
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.example.atlysmovies.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -26,10 +27,13 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.atlysmovies.R
+import com.example.atlysmovies.data.model.Movie
 
 @Composable
-fun MovieCard() {
-    Column(horizontalAlignment = Alignment.Start) {
+fun MovieCard(movie: Movie, onClick: () -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.Start,
+        modifier = Modifier.clickable { onClick.invoke() }) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -39,7 +43,7 @@ fun MovieCard() {
         {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://www.omdbapi.com/src/poster.jpg")
+                    .data(movie.poster)
                     .crossfade(true)
                     .build(),
                 placeholder = painterResource(R.drawable.error),
@@ -50,7 +54,7 @@ fun MovieCard() {
         }
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "Doctor Strange",
+            text = movie.title,
             fontWeight = FontWeight.W500,
             fontSize = 16.sp,
             lineHeight = 24.sp
@@ -62,5 +66,12 @@ fun MovieCard() {
 @Composable
 @Preview
 fun PreviewMovieCard() {
-    MovieCard()
+    val movie = Movie(
+        "Doctor Strange",
+        "https://www.omdbapi.com/src/poster.jpg",
+        description = ""
+    )
+    MovieCard(movie) {
+
+    }
 }

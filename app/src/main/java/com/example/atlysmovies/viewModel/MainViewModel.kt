@@ -14,19 +14,28 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repository: MoviesRepository) : ViewModel() {
 
-    private val _movieDetails = MutableStateFlow<List<Movie>>(emptyList())
-    val movieDetails: StateFlow<List<Movie>?> = _movieDetails
+    private val _uiState = MutableStateFlow<MoviesUIState>(MoviesUIState.NoMovies())
+    val uiState: StateFlow<MoviesUIState> = _uiState
 
     fun fetchMovieList(searchQuery: String) {
         viewModelScope.launch {
+            _uiState.emit(MoviesUIState.Loading)
             repository.getMoviesList(searchQuery)
                 .catch { e ->
-                    e.printStackTrace() // Handle errors
+                    _uiState.emit(MoviesUIState.NoMovies(error = e.message.toString()))
+                    e.printStackTrace()
                 }
                 .collect { response ->
-                    _movieDetails.value = response
+                    _uiState.emit(MoviesUIState.HasMovies(response))
                 }
         }
     }
 
+}
+
+
+sealed class MoviesUIState {
+    data class NoMovies(val error: String = "") : MoviesUIState()
+    data class HasMovies(val movies: List<Movie>) : MoviesUIState()
+    data object Loading : MoviesUIState()
 }
