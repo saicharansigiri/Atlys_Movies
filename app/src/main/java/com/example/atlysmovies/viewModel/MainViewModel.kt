@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,6 +17,9 @@ class MainViewModel @Inject constructor(private val repository: MoviesRepository
 
     private val _uiState = MutableStateFlow<MoviesUIState>(MoviesUIState.NoMovies())
     val uiState: StateFlow<MoviesUIState> = _uiState
+
+    private var originalMoviesList: List<Movie> = emptyList()
+
 
     fun fetchMovieList() {
         viewModelScope.launch {
@@ -26,13 +30,24 @@ class MainViewModel @Inject constructor(private val repository: MoviesRepository
                     e.printStackTrace()
                 }
                 .collect { response ->
+                    originalMoviesList = response
                     _uiState.emit(MoviesUIState.HasMovies(response))
                 }
         }
     }
 
     fun searchMovies(query: String) {
-
+        viewModelScope.launch {
+            _uiState.emit(MoviesUIState.Loading)
+            if (query.isEmpty()) {
+                _uiState.emit(MoviesUIState.HasMovies(originalMoviesList))
+            } else {
+                val filteredMovies = originalMoviesList.filter {
+                    it.title.contains(query, ignoreCase = true)
+                }
+                _uiState.emit(MoviesUIState.HasMovies(filteredMovies))
+            }
+        }
     }
 
 }
@@ -40,6 +55,8 @@ class MainViewModel @Inject constructor(private val repository: MoviesRepository
 
 sealed class MoviesUIState {
     data class NoMovies(val error: String = "") : MoviesUIState()
-    data class HasMovies(val movies: List<Movie>) : MoviesUIState()
+    data class HasMovies(val movies: List<Movie>, val filteredList: List<Movie> = emptyList()) :
+        MoviesUIState()
+
     data object Loading : MoviesUIState()
 }

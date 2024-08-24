@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.example.atlysmovies.R
 
 @Composable
-fun SearchBar() {
+fun SearchBar(onTextChange: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
     Surface(
         shape = RoundedCornerShape(8),
@@ -49,7 +49,8 @@ fun SearchBar() {
             TextField(
                 value = text,
                 onValueChange = {
-
+                    text = it
+                    onTextChange.invoke(it)
                 },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
@@ -78,5 +79,5 @@ fun SearchBar() {
 @Composable
 @Preview
 fun PreviewSearchBar() {
-    SearchBar()
+    SearchBar(){}
 }

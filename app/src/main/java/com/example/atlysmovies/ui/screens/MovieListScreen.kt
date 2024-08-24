@@ -32,7 +32,9 @@ fun MovieListScreen(
 
     Column(modifier = Modifier.padding(paddingValues)) {
         Spacer(modifier = Modifier.height(24.dp))
-        SearchBar()
+        SearchBar(){
+            viewModel.searchMovies(it)
+        }
         Spacer(modifier = Modifier.height(30.dp))
         ShowMovies(viewModel, onMovieClick)
     }
