@@ -1,6 +1,5 @@
 package com.example.atlysmovies.ui.navigation
 
-import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,6 +12,8 @@ import com.example.atlysmovies.data.model.Movie
 import com.example.atlysmovies.ui.screens.MovieDetailScreen
 import com.example.atlysmovies.ui.screens.MovieListScreen
 import com.example.atlysmovies.viewModel.MainViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import kotlin.reflect.typeOf
 
 
@@ -26,10 +27,15 @@ fun MainNavigation(paddingValues: PaddingValues) {
         composable<MoviesListScreenRoute> {
             val viewModel = hiltViewModel<MainViewModel>()
             LaunchedEffect(Unit) {
-                viewModel.fetchMovieList("Batman")
+                viewModel.fetchMovieList("Spider Man")
             }
             MovieListScreen(paddingValues, viewModel) { movie ->
-                navController.navigate(MovieDetailScreenRoute(movie))
+                val encodedPosterUrl =
+                    URLEncoder.encode(movie.poster, StandardCharsets.UTF_8.toString())
+                val encodedMovie = movie.copy(
+                    poster = encodedPosterUrl
+                )
+                navController.navigate(MovieDetailScreenRoute(encodedMovie))
             }
         }
 

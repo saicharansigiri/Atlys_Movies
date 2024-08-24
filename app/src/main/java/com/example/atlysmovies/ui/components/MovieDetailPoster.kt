@@ -3,6 +3,7 @@ package com.example.atlysmovies.ui.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.CircleShape
@@ -26,7 +27,7 @@ import coil.request.ImageRequest
 import com.example.atlysmovies.R
 
 @Composable
-fun MovieDetailPoster(poster: String) {
+fun MovieDetailPoster(poster: String,title:String) {
     Column(horizontalAlignment = Alignment.Start) {
         Card(
             modifier = Modifier
@@ -43,12 +44,12 @@ fun MovieDetailPoster(poster: String) {
                 placeholder = painterResource(R.drawable.error),
                 contentDescription = stringResource(R.string.description),
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.clip(CircleShape)
+                modifier = Modifier.fillMaxSize()
             )
         }
         Spacer(modifier = Modifier.height(24.dp))
         Text(
-            text = "Doctor Strange",
+            text = title,
             fontWeight = FontWeight.W500,
             fontSize = 24.sp,
             lineHeight = 32.sp
@@ -60,5 +61,5 @@ fun MovieDetailPoster(poster: String) {
 @Composable
 @Preview
 fun PreviewMovieDetailPoster() {
-    MovieDetailPoster("https://sample.jpg")
+    MovieDetailPoster("https://sample.jpg","Doctor Strange")
 }

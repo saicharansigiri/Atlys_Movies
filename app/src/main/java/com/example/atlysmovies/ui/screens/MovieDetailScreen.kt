@@ -23,14 +23,14 @@ fun MovieDetailScreen(movie: Movie, paddingValues: PaddingValues, onBackClick: (
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(paddingValues)
             .padding(vertical = 16.dp, horizontal = 16.dp)
     ) {
+        Spacer(modifier = Modifier.height(24.dp))
         AppBar(onBackClick)
         Spacer(modifier = Modifier.height(24.dp))
-        MovieDetailPoster(movie.poster)
+        MovieDetailPoster(movie.poster, movie.title)
         Spacer(modifier = Modifier.height(24.dp))
-        MovieDescription(text = movie.title)
+        MovieDescription(text = movie.description ?: "")
     }
 }
 
