@@ -27,7 +27,7 @@ fun MainNavigation(paddingValues: PaddingValues) {
         composable<MoviesListScreenRoute> {
             val viewModel = hiltViewModel<MainViewModel>()
             LaunchedEffect(Unit) {
-                viewModel.fetchMovieList("Spider Man")
+                viewModel.fetchMovieList()
             }
             MovieListScreen(paddingValues, viewModel) { movie ->
                 val encodedPosterUrl =

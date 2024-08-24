@@ -4,5 +4,5 @@ import com.example.atlysmovies.data.model.Movie
 import kotlinx.coroutines.flow.Flow
 
 interface MoviesRepository {
-    fun getMoviesList(searchQuery: String): Flow<List<Movie>>
+    fun getMoviesList(): Flow<List<Movie>>
 }

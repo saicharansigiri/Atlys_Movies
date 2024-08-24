@@ -12,9 +12,10 @@ import javax.inject.Inject
 class MoviesRepoImp @Inject constructor(private val omdbApiService: OmdbApiService) :
     MoviesRepository {
 
-    override fun getMoviesList(searchQuery: String): Flow<List<Movie>> {
+    override fun getMoviesList(): Flow<List<Movie>> {
         return flow {
             try {
+                val searchQuery = "Spider Man"
                 val response = omdbApiService.getMovieDetails(searchQuery)
                 val listWithDescription = response.list.map { movie ->
                     val description = """
