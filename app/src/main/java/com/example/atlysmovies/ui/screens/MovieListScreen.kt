@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.atlysmovies.data.model.Movie
+import com.example.atlysmovies.errorutils.ErrorResponse
 import com.example.atlysmovies.ui.components.MovieCard
 import com.example.atlysmovies.ui.components.SearchBar
 import com.example.atlysmovies.viewModel.MainViewModel
@@ -29,38 +31,57 @@ fun MovieListScreen(
     viewModel: MainViewModel,
     onMovieClick: (movie: Movie) -> Unit
 ) {
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(modifier = Modifier.padding(paddingValues)) {
         Spacer(modifier = Modifier.height(24.dp))
-        SearchBar(){
-            viewModel.searchMovies(it)
-        }
-        Spacer(modifier = Modifier.height(30.dp))
-        ShowMovies(viewModel, onMovieClick)
+        ShowMovies(
+            uiState.value,
+            onMovieClick,
+            retry = { viewModel.retryFetchMovies() },
+            onSearchUpdate = { viewModel.updateSearchQuery(it) },
+        )
+
     }
 
 }
 
 @Composable
-fun ShowMovies(viewModel: MainViewModel, onMovieClick: (movie: Movie) -> Unit) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+fun ShowMovies(
+    uiState: MoviesUIState,
+    onMovieClick: (movie: Movie) -> Unit,
+    retry: () -> Unit,
+    onSearchUpdate: (String) -> Unit
+) {
 
-    when (uiState.value) {
+    when (uiState) {
         is MoviesUIState.HasMovies -> {
-            ShowMoviesGrid(
-                onMovieClick,
-                (uiState.value as MoviesUIState.HasMovies).movies
-            )
+            SearchBar() {
+                onSearchUpdate.invoke(it)
+            }
+            if (uiState.movies.isEmpty()) {
+                ShowNoMovies()
+            } else {
+                ShowMoviesGrid(
+                    onMovieClick,
+                    uiState.movies
+                )
+            }
+
         }
+
         MoviesUIState.Loading -> {
             ShowLoading()
         }
+
         is MoviesUIState.NoMovies -> {
-            val error = (uiState.value as MoviesUIState.NoMovies).error
-            if (error.isEmpty()) {
+            val error = uiState.error
+            if (error.errorMsg.isEmpty()) {
                 ShowNoMovies()
             } else {
-                ShowError(error)
+                ShowError(error) {
+                    retry.invoke()
+                }
             }
         }
     }
@@ -69,7 +90,7 @@ fun ShowMovies(viewModel: MainViewModel, onMovieClick: (movie: Movie) -> Unit) {
 @Composable
 fun ShowMoviesGrid(
     onMovieClick: (movie: Movie) -> Unit,
-    movies: List<Movie>
+    movies: List<Movie>,
 ) {
     val gridState = rememberLazyGridState()
     LazyVerticalGrid(
@@ -87,14 +108,21 @@ fun ShowMoviesGrid(
 }
 
 @Composable
-fun ShowError(error: String) {
+fun ShowError(error: ErrorResponse, retry: () -> Unit) {
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
-        Text(text = "Error: $error")
+        Text(text = error.errorMsg)
+        if (error.retry) {
+            Button(onClick = { retry.invoke() }) {
+                Text(text = "Retry")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+        }
     }
 }
 
