@@ -26,16 +26,18 @@ class MainViewModel @Inject constructor(private val repository: MoviesRepository
 
     private var originalMoviesList: List<Movie> = emptyList()
 
-    private val searchQuery = MutableStateFlow("")
+    private val searchQuery = MutableStateFlow<String?>(null)
 
 
     init {
         viewModelScope.launch {
             searchQuery
-                .debounce(500)
+                .debounce(400)
                 .distinctUntilChanged()
                 .collect { query ->
-                    searchMovies(query)
+                    query?.let{
+                        searchMovies(it)
+                    }
                 }
         }
     }
@@ -72,9 +74,9 @@ class MainViewModel @Inject constructor(private val repository: MoviesRepository
 
     private suspend fun searchMovies(query: String) {
         _uiState.emit(MoviesUIState.Loading)
-        if (query.isEmpty()) {
+        if(query.isEmpty()){
             _uiState.emit(MoviesUIState.HasMovies(originalMoviesList))
-        } else {
+        }else{
             val filteredMovies = originalMoviesList.filter {
                 it.title.contains(query, ignoreCase = true)
             }
