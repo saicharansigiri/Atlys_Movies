@@ -59,15 +59,10 @@ fun ShowMovies(
             SearchBar() {
                 onSearchUpdate.invoke(it)
             }
-            if (uiState.movies.isEmpty()) {
-                ShowNoMovies()
-            } else {
-                ShowMoviesGrid(
-                    onMovieClick,
-                    uiState.movies
-                )
-            }
-
+            ShowMoviesGrid(
+                onMovieClick,
+                uiState.movies
+            )
         }
 
         MoviesUIState.Loading -> {
